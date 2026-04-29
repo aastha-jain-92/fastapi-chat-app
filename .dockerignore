@@ -1,0 +1,122 @@
+# =========================
+# Git
+# =========================
+.git
+.gitignore
+.gitattributes
+
+# =========================
+# Python cache / compiled
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# =========================
+# Virtual environments
+# =========================
+venv/
+.venv/
+env/
+ENV/
+
+# =========================
+# Environment / secrets
+# =========================
+.env
+.env.*
+*.pem
+*.key
+*.crt
+secrets/
+credentials/
+
+# =========================
+# Testing / coverage
+# =========================
+tests/
+test/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+tox.ini
+.nox/
+
+# =========================
+# Logs / temp
+# =========================
+*.log
+logs/
+tmp/
+temp/
+
+# =========================
+# Editors / IDE
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# OS junk
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Build artifacts
+# =========================
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# =========================
+# Local databases
+# =========================
+*.sqlite3
+*.db
+
+# =========================
+# Docker
+# =========================
+docker-compose*.yml
+compose*.yml
+
+# (Keep Dockerfile if image builds from it)
+
+# =========================
+# Docs / notebooks
+# =========================
+docs/
+notebooks/
+*.ipynb
+
+# =========================
+# Node (if frontend exists)
+# =========================
+node_modules/
+
+# =========================
+# Redis / PostgreSQL local volumes
+# =========================
+redis-data/
+postgres-data/
+pgdata/
+
+# =========================
+# Keep these INCLUDED
+# =========================
+# app/
+# requirements.txt
+# pyproject.toml
+# alembic.ini
+# migrations/
+# gunicorn_conf.py
+# entrypoint.sh

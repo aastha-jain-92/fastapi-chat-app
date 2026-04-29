@@ -1,0 +1,9 @@
+.env
+chatappenv/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+.pytest_cache/
+.coverage
+htmlcov/

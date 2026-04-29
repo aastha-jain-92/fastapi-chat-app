@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProChat | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-light: #f3f4f6;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --error-red: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            /* Matching the subtle pattern from the chat bg */
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .login-header {
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            color: var(--text-main);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            outline: none;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #error-message {
+            color: var(--error-red);
+            font-size: 0.85rem;
+            margin-top: 15px;
+            min-height: 20px;
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Loading state */
+        button.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="login-header">
+        <h2>Welcome Back</h2>
+        <p>Enter your credentials to access your chat</p>
+    </div>
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="e.g. john_doe" autocomplete="username">
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <button id="loginBtn" onclick="login()">Sign In</button>
+     <button class="register-btn" onclick="goToRegister()">
+        New User? Create Account
+    </button>
+    <div id="error-message"></div>
+
+    <p class="footer-text">
+        Secure, encrypted, and real-time.
+    </p>
+</div>
+
+<script>
+    let token = "";
+
+    async function login() {
+        const usernameEl = document.getElementById("username");
+        const passwordEl = document.getElementById("password");
+        const loginBtn = document.getElementById("loginBtn");
+        const errorEl = document.getElementById("error-message");
+
+        // UI Reset
+        errorEl.textContent = "";
+        loginBtn.classList.add("loading");
+        loginBtn.textContent = "Authenticating...";
+
+        try {
+            const res = await fetch("/auth/login", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                credentials: "include", // Important for cookie handling
+                body: JSON.stringify({
+                    username: usernameEl.value,
+                    password: passwordEl.value
+                })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                window.location.href = "/chat";
+            } else {
+                errorEl.textContent = data.detail || "Invalid username or password.";
+                loginBtn.classList.remove("loading");
+                loginBtn.textContent = "Sign In";
+            }
+        } catch (err) {
+            errorEl.textContent = "Connection failed. Is the server running?";
+            loginBtn.classList.remove("loading");
+            loginBtn.textContent = "Sign In";
+        }
+    }
+    function goToRegister(){
+    window.location.href = "/register";
+    }
+    // Allow "Enter" key to submit
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") login();
+    });
+</script>
+
+</body>
+</html>
