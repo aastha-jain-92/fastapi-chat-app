@@ -220,6 +220,12 @@
     socket.onmessage = function(event) {
         const data = JSON.parse(event.data);
 
+        if (data.type === "error") {
+            const userConfirmed = alert(data.message);
+            window.location.href = "/register";
+            return;
+        }
+
         if (data.type === "typing") {
             showTypingIndicator(data.sender);
             return;

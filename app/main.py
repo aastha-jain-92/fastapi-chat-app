@@ -19,6 +19,7 @@ from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
     asyncio.create_task(manager.subscribe())
     yield
     # Shutdown code
@@ -36,7 +37,8 @@ app.include_router(messages.router)
 
 templates = Jinja2Templates(directory="app/templates")
 app.include_router(auth.router, prefix="/auth")
-Base.metadata.create_all(bind=engine)
+
+
 
 @app.get("/")
 def home(request: Request):
@@ -116,7 +118,18 @@ async def websocket_endpoint(websocket: WebSocket):
                 continue
             receiver = data["to"]
             message = data["message"]
-            # Save to DB
+
+            # Check if receiver exists before saving
+            receiver_exists = db.query(models.User).filter(models.User.username == receiver).first()
+
+            if not receiver_exists:
+                await websocket.send_text(json.dumps({
+                    "type": "error",
+                    "message": f"User '{receiver}' does not exist."
+                }))
+                continue
+
+            # Save to DB only if receiver exists
             msg = models.Message(
                 sender=username,
                 receiver=receiver,
@@ -165,4 +178,4 @@ def register_page(request: Request):
 # @app.on_event("startup")
 # async def startup_event():
 #     asyncio.create_task(manager.subscribe())
-
+
