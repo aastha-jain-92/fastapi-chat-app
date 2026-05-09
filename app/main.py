@@ -16,6 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import asyncio
 from app.core.config import settings
 from contextlib import asynccontextmanager
+from app.routers.upload import router as upload_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -34,6 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(messages.router)
+app.include_router(upload_router)
 
 templates = Jinja2Templates(directory="app/templates")
 app.include_router(auth.router, prefix="/auth")
